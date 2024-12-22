@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <meta charset="UTF-8">
+    <title>Список договоров</title>
+</head>
+<body>
+    <h1>Список договоров</h1>
+
+    <!-- Ссылка на добавление нового договора -->
+    <a href="{% url 'contract_create' %}">Добавить договор</a>
+    <br><br>
+
+    <!-- Проверка наличия договоров -->
+    {% if contracts %}
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Ежемесячная плата</th>
+                    <th>Срок начала действия</th>
+                    <th>Срок окончания действия</th>
+                    <th>Клиент</th>
+                    <th>Скидка</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contract in contracts %}
+                <tr>
+                    <td>{{ contract.0 }}</td>
+                    <td>{{ contract.1|floatformat:0 }} ₽</td>
+                    <td>{{ contract.2|date:"d.m.Y" }}</td>
+                    <td>{{ contract.3|date:"d.m.Y" }}</td>
+                    <td>{{ contract.4 }}</td>
+                    <td>{{ contract.5|floatformat:0 }} ₽</td>
+                    <td>
+                        <!-- Ссылки для редактирования и удаления -->
+                        <a href="{% url 'contract_update' contract.0 %}">Редактировать</a> |
+                        <a href="{% url 'contract_delete' contract.0 %}" onclick="return confirm('Удалить договор?');">Удалить</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <!-- Сообщение, если договоров нет -->
+        <p>Договоры отсутствуют.</p>
+    {% endif %}
+</body>
+</html>
