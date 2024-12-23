@@ -26,18 +26,22 @@ class AccessManager:
 # получаем информацию по договору клиента
     def contract_client_information(self, contract_id):
         self.cursor.execute('''
-        SELECT [Ежемесячная плата], [Срок начала действия], [Срок окончания действия] 
+        SELECT [Ежемесячная плата], [Срок начала действия], [Срок окончания действия], [Клиент].[ФИО] AS client_name
         FROM [Договор] 
-        WHERE [id договора] = ?
+        LEFT JOIN [Клиент]
+        ON [Договор].[id клиента] = [Клиент].[id клиента]
+        WHERE [id договора] = ?;
         ''', (contract_id,))
         row = self.cursor.fetchone()
         return {
-            'monthly_fee' : row[0],
-            'effective_date' : row[1],
-            'expiry_date' : row[2]
+            'monthly_fee': row[0],
+            'effective_date': row[1].strftime('%Y-%m-%d') if row[1] else '',
+            'expiry_date': row[2].strftime('%Y-%m-%d') if row[2] else '',
+            'client_name': row[3]
         }
 
-# получаем все договора
+
+    # получаем все договора
     def fetch_all(self):
         self.cursor.execute('''SELECT 
     [Договор].[id договора] AS contract_id,

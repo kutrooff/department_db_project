@@ -22,10 +22,12 @@
 
         <label for="client">Клиент:</label><br>
         <select name="client" id="client" required>
-            <option value="" disabled selected>Выберите клиента</option>
-            {% for client in clients %}
-                <option value="{{ client }}">{{ client }}</option>
-            {% endfor %}
+            <option value="{{ contract.client_name }}" selected>{{ contract.client_name }}</option>
+                {% for client in clients %}
+                    {% if client != contract.client_name %}
+                        <option value="{{ client }}">{{ client }}</option>
+                    {% endif %}
+                {% endfor %}
         </select><br>
 
         <button type="submit">Сохранить</button>
